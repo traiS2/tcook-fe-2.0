@@ -1,26 +1,259 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
+  --font-heading: var(--font-quicksand), system-ui, sans-serif;
+  --font-body: var(--font-be-vietnam-pro), system-ui, sans-serif;
+  --font-script: var(--font-dancing-script), cursive;
+  --font-sans: var(--font-body);
+
+  --color-cream-50: #faf9f7;
+  --color-cream-100: #f6f4f0;
+  --color-cream-200: #f0eeea;
+  --color-cream-300: #ece6dd;
+  --color-cream-400: #dcd5cb;
+
+  --color-ink-900: #171614;
+  --color-ink-800: #2c2a26;
+  --color-ink-700: #3a3833;
+  --color-ink-600: #57544e;
+  --color-ink-500: #6b6862;
+  --color-ink-400: #7a766f;
+  --color-ink-300: #8a857d;
+  --color-ink-200: #a8a39a;
+  --color-ink-100: #c9c3b8;
+  --color-ink-50: #d9d4cb;
+
+  --color-gold-700: #c8891b;
+  --color-gold-600: #e8981f;
+  --color-gold-300: #f0dcae;
+  --color-gold-100: #fff7ea;
+  --color-gold-50: #f6efdc;
+
+  --color-red-600: #d4574e;
+  --color-red-300: #e6b7b1;
+  --color-red-100: #f6e3e3;
+
+  --color-green-600: #5a9e56;
+
+  /* Semantic tokens — shared vocabulary for future components (incl. a
+     dashboard) so they can use bg-background/text-foreground/bg-primary/etc.
+     instead of naming brand swatches directly. Values point at the brand
+     palette above; change the palette, not these. */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  color-scheme: light;
+  --radius: 1rem;
+
+  /* Semantic token values, mapped onto the brand palette above (same
+     mapping the old tcook-fe project used for its .blog-theme). */
+  --background: #ffffff;
+  --foreground: var(--color-ink-900);
+  --card: #ffffff;
+  --card-foreground: var(--color-ink-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-ink-900);
+  --primary: var(--color-cream-300);
+  --primary-foreground: var(--color-ink-800);
+  --secondary: var(--color-cream-200);
+  --secondary-foreground: var(--color-ink-900);
+  --muted: var(--color-cream-100);
+  --muted-foreground: var(--color-ink-300);
+  --accent: var(--color-cream-200);
+  --accent-foreground: var(--color-ink-900);
+  --destructive: var(--color-red-600);
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.06);
+  --input: transparent;
+  --ring: var(--color-ink-800);
+  --chart-1: var(--color-gold-700);
+  --chart-2: var(--color-gold-600);
+  --chart-3: var(--color-green-600);
+  --chart-4: var(--color-ink-300);
+  --chart-5: var(--color-cream-300);
+  --sidebar: var(--color-cream-100);
+  --sidebar-foreground: var(--color-ink-900);
+  --sidebar-primary: var(--color-cream-300);
+  --sidebar-primary-foreground: var(--color-ink-800);
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: var(--color-ink-900);
+  --sidebar-border: rgba(0, 0, 0, 0.06);
+  --sidebar-ring: var(--color-ink-800);
+}
+
+/* Base element styles live in @layer base so Tailwind utilities (@layer
+   utilities) always win. Without this, plain `a:hover { color:#000 }` would
+   override hover:text-* utilities on link elements (e.g. social icons). */
+@layer base {
+  * {
+    border-color: var(--color-border);
+    outline-color: color-mix(in oklab, var(--color-ring) 50%, transparent);
+  }
+
+  body {
+    margin: 0;
+    background: #fff;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: var(--color-ink-900);
+    text-decoration: none;
+  }
+  a:hover {
+    color: #000;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    margin: 0;
+    color: var(--color-ink-900);
+  }
+
+  p {
+    margin: 0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.font-script {
+  font-family: var(--font-script);
+}
+
+/* Placeholder "image" block: diagonal stripes with a centered label,
+   used everywhere in place of real photography until real assets are wired in. */
+.placeholder-img {
+  background: repeating-linear-gradient(
+    135deg,
+    #eceae5,
+    #eceae5 13px,
+    #f5f3ef 13px,
+    #f5f3ef 26px
+  );
+  position: relative;
+}
+.placeholder-img::after {
+  content: attr(data-label);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 11px ui-monospace, Menlo, monospace;
+  color: #a29d94;
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 0 12px;
+}
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.2s linear;
+}
+[data-reveal].in {
+  animation: revealIn 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@keyframes revealIn {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  [data-reveal].in {
+    animation: none;
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+@keyframes floatY2 {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+@keyframes ckin {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer components {
+  /* Shared page gutter: content maxes out at 1200px (1240px for the wider
+     planner/shopping layouts) and gutters never drop below 40px. Every
+     section in the original design repeats this exact calc(). */
+  .page-px {
+    padding-left: max(40px, calc((100% - 1200px) / 2));
+    padding-right: max(40px, calc((100% - 1200px) / 2));
+  }
+  .page-px-wide {
+    padding-left: max(40px, calc((100% - 1240px) / 2));
+    padding-right: max(40px, calc((100% - 1240px) / 2));
+  }
 }
