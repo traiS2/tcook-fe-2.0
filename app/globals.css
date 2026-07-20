@@ -82,6 +82,11 @@
   color-scheme: light;
   --radius: 1rem;
 
+  /* Hover/transition speed. Tailwind's default is 150ms which feels too
+     snappy; the original design uses ~320ms for card hovers, so slow the
+     global default down. Utilities with an explicit duration-* still win. */
+  --default-transition-duration: 400ms;
+
   /* Semantic token values, mapped onto the brand palette above (same
      mapping the old tcook-fe project used for its .blog-theme). */
   --background: #ffffff;
@@ -142,11 +147,19 @@
     color: #000;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   h1,
   h2,
   h3,
   h4 {
     font-family: var(--font-heading);
+    /* Design leaves headings at the UA-default bold; Tailwind's preflight
+       resets them to `font-weight: inherit` (400), so restore 700 here.
+       Explicit weight utilities (font-medium/semibold/etc.) still win. */
+    font-weight: 700;
     margin: 0;
     color: var(--color-ink-900);
   }

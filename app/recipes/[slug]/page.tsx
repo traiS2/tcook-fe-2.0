@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Reveal } from "@/components/ui/Reveal";
@@ -40,8 +41,6 @@ import {
   StarIcon,
 } from "@/components/icons";
 
-const recipe = getRecipeBySlug(DETAIL_RECIPE_SLUG)!;
-
 function ingredientKey(groupIndex: number, itemIndex: number) {
   return `${groupIndex}-${itemIndex}`;
 }
@@ -49,6 +48,12 @@ function ingredientKey(groupIndex: number, itemIndex: number) {
 export default function RecipeDetailPage() {
   const { isFavorite, toggleFavorite } = useFavorites();
   const { recordView } = useRecentViews();
+
+  // Resolve the recipe from the URL slug so search/card links open the right
+  // recipe. Detailed sections (steps, ingredient groups, tips) are still shared
+  // sample content — only the sample recipe has that data authored.
+  const { slug } = useParams<{ slug: string }>();
+  const recipe = getRecipeBySlug(slug) ?? getRecipeBySlug(DETAIL_RECIPE_SLUG)!;
 
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState(false);
@@ -62,9 +67,9 @@ export default function RecipeDetailPage() {
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
 
   useEffect(() => {
-    recordView(DETAIL_RECIPE_SLUG);
+    recordView(recipe.slug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [recipe.slug]);
 
   const requestWakeLock = () => {
     try {
@@ -176,7 +181,7 @@ export default function RecipeDetailPage() {
     copyTimeoutRef.current = setTimeout(() => setCopied(false), 1600);
   };
 
-  const isFav = isFavorite(DETAIL_RECIPE_SLUG);
+  const isFav = isFavorite(recipe.slug);
   const currentStep = RECIPE_STEPS[stepIndex];
   const ckProgress = Math.round(((stepIndex + 1) / RECIPE_STEPS.length) * 100);
 
@@ -210,15 +215,14 @@ export default function RecipeDetailPage() {
                 Nổi bật
               </span>
             </div>
-            <span className="font-script text-[26px] text-ink-700">Không cần lò nướng · vintage</span>
+            {recipe.slug === DETAIL_RECIPE_SLUG && (
+              <span className="font-script text-[26px] text-ink-700">Không cần lò nướng · vintage</span>
+            )}
             <h1 className="mt-1 text-5xl font-bold leading-[1.05] tracking-tight max-sm:text-4xl">
-              Bánh Tiramisu
-              <br />
-              Việt Quất
+              {recipe.name}
             </h1>
             <p className="mt-4 max-w-[460px] text-[15px] leading-relaxed text-ink-500">
-              Lớp mứt việt quất chua ngọt tự sên hòa quyện kem phô mai Mascarpone béo ngậy, xen bánh quy
-              sâm banh thấm sữa — mềm mịn, tan ngay đầu lưỡi.
+              {recipe.description}
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-4 text-[13px] text-ink-600">
               <span className="flex items-center gap-1.5">
@@ -278,7 +282,7 @@ export default function RecipeDetailPage() {
               </a>
               <button
                 type="button"
-                onClick={() => toggleFavorite(DETAIL_RECIPE_SLUG)}
+                onClick={() => toggleFavorite(recipe.slug)}
                 className={`inline-flex items-center gap-2 rounded-full border px-6 py-3.5 font-body text-sm font-semibold transition-transform hover:-translate-y-0.5 ${
                   isFav ? "border-red-300 bg-red-100 text-red-600" : "border-black/14 bg-white text-ink-900"
                 }`}

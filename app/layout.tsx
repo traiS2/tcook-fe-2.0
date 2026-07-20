@@ -4,19 +4,19 @@ import "./globals.css";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
 });
 
 const beVietnamPro = Be_Vietnam_Pro({
   variable: "--font-be-vietnam-pro",
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["300", "400", "500", "600", "700"],
 });
 
 const dancingScript = Dancing_Script({
   variable: "--font-dancing-script",
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["600", "700"],
 });
 

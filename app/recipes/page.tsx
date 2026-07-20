@@ -11,6 +11,8 @@ import { FEATURED_RECIPE_SLUG, RECIPES, RECIPE_CATEGORIES, getRecipeBySlug, type
 import { difficultyMeta, parseMinutes } from "@/lib/format";
 import {
   ArrowRightIcon,
+  BagIcon,
+  BarsIcon,
   CalendarIcon,
   CheckIcon,
   ChefHatIcon,
@@ -20,7 +22,7 @@ import {
   HeartIcon,
   SearchIcon,
   StarIcon,
-  UsersIcon,
+  UserIcon,
 } from "@/components/icons";
 
 const CATEGORY_OPTIONS: string[] = ["Tất cả", ...RECIPE_CATEGORIES];
@@ -169,7 +171,7 @@ export default function RecipesPage() {
             <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-500">{featured.description}</p>
             <div className="mt-5 grid grid-cols-4 gap-2.5">
               <StatBox label="Thời gian" value="4g 55p" icon={<ClockIcon size={16} />} />
-              <StatBox label="Khẩu phần" value={featured.serve} icon={<UsersIcon size={16} />} />
+              <StatBox label="Khẩu phần" value={featured.serve} icon={<UserIcon size={16} />} />
               <StatBox
                 label="Độ khó"
                 value={featured.difficulty}
@@ -236,7 +238,10 @@ export default function RecipesPage() {
           </div>
 
           <div className="rounded-2xl border border-black/7 p-4">
-            <h4 className="mb-2.5 text-sm">Danh mục</h4>
+            <div className="mb-2.5 flex items-center justify-between">
+              <h4 className="text-sm">Danh mục</h4>
+              <BarsIcon size={15} className="text-ink-200" />
+            </div>
             <div className="flex flex-col gap-0.5">
               {CATEGORY_OPTIONS.map((c) => (
                 <button
@@ -316,7 +321,10 @@ export default function RecipesPage() {
           </div>
 
           <div className="rounded-2xl border border-black/7 p-4">
-            <h4 className="mb-2.5 text-sm">Nguyên liệu sẵn có</h4>
+            <div className="mb-2.5 flex items-center justify-between">
+              <h4 className="text-sm">Nguyên liệu sẵn có</h4>
+              <BagIcon size={15} className="text-ink-200" />
+            </div>
             <div className="flex flex-col gap-0.5">
               {INGREDIENT_OPTIONS.map((i) => {
                 const on = ingredients.includes(i);
@@ -365,11 +373,11 @@ export default function RecipesPage() {
           </Reveal>
 
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-2 gap-5.5 max-sm:grid-cols-1">
+            <Reveal delay="80ms" className="grid grid-cols-2 gap-5.5 max-sm:grid-cols-1">
               {filtered.map((r) => (
                 <RecipeCard key={r.slug} recipe={r} isFav={isFavorite(r.slug)} onToggleFav={() => toggleFavorite(r.slug)} />
               ))}
-            </div>
+            </Reveal>
           ) : (
             <div className="rounded-[18px] border border-dashed border-black/12 px-5 py-15 text-center text-ink-300">
               <div className="mb-3 flex justify-center text-ink-50">
@@ -442,7 +450,7 @@ function RecipeCard({
         <p className="mt-1.75 line-clamp-3 text-[12.5px] leading-relaxed text-ink-500">{recipe.description}</p>
         <div className="mt-3.5 grid grid-cols-4 gap-1.75">
           <MiniStat label="Thời gian" value={recipe.time} icon={<ClockIcon size={14} />} />
-          <MiniStat label="Khẩu phần" value={recipe.serve} icon={<UsersIcon size={14} />} />
+          <MiniStat label="Khẩu phần" value={recipe.serve} icon={<UserIcon size={14} />} />
           <MiniStat
             label="Độ khó"
             value={recipe.difficulty}

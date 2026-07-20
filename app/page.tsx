@@ -9,15 +9,19 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useRecentViews } from "@/hooks/useRecentViews";
 import { CATEGORIES, RECIPES, FEATURED_RECIPE_SLUG, getRecipeBySlug } from "@/lib/data";
-import { categoryHeadColor, difficultyMeta } from "@/lib/format";
+import { categoryHeadColor, difficultyMeta, shortTime } from "@/lib/format";
 import {
   ArrowRightIcon,
+  AwardIcon,
   BookOpenIcon,
+  CheckSquareIcon,
   ChefHatIcon,
   ClockIcon,
+  GridIcon,
   HeartIcon,
   SparkleIcon,
   StarIcon,
+  UserIcon,
   UsersIcon,
 } from "@/components/icons";
 
@@ -25,7 +29,7 @@ const WHY_CARDS = [
   {
     title: "Công Thức Chất Lượng",
     desc: "Mỗi công thức đều được tuyển chọn và kiểm tra kỹ lưỡng bởi đội ngũ đầu bếp chuyên nghiệp.",
-    icon: StarIcon,
+    icon: AwardIcon,
   },
   {
     title: "Hướng Dẫn Chi Tiết",
@@ -74,7 +78,7 @@ export default function HomePage() {
           : ingMatch
             ? "Nguyên liệu bạn thích"
             : "Đáng thử"
-        : "Được yêu thích";
+        : "Gợi ý cho bạn";
       return { ...r, score, reason };
     });
 
@@ -95,35 +99,32 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="bg-gradient-to-b from-cream-50 to-white">
-        <SiteHeader activeNav="home" />
+      <SiteHeader activeNav="home" />
 
+      <div className="bg-gradient-to-b from-cream-50 to-white">
         {/* hero */}
         <div className="grid grid-cols-[1.05fr_0.95fr] items-center gap-11 page-px pt-6.5 pb-14 max-lg:grid-cols-1">
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-black/6 bg-cream-200 px-3.5 py-1.5 font-body text-xs font-semibold tracking-[0.02em] text-ink-600">
               <SparkleIcon size={14} />
-              Ẩm thực · Công thức · Cảm hứng
+              Công thức · Mẹo vặt · Cảm hứng bếp núc
             </span>
             <h1 className="mt-5 text-[56px] font-bold leading-[1.06] tracking-tight max-sm:text-4xl">
-              Khám Phá
+              Nấu Ăn Ngon
               <br />
-              Hương Vị
-              <br />
-              Đỉnh Cao
+              Mỗi Ngày
             </h1>
             <p className="font-script mt-3.5 text-[26px] text-ink-700">
               Nấu những bữa ăn cho người bạn yêu thương
             </p>
             <p className="mt-4 max-w-[430px] text-[15px] leading-relaxed text-ink-500">
-              Hành trình ẩm thực của bạn bắt đầu tại đây. Những công thức độc đáo, bí quyết nấu ăn
-              sáng tạo và hương vị tuyệt vời từ khắp mọi miền — cùng TCook biến căn bếp thành nơi
-              lan tỏa cảm hứng.
+              Hôm nay nấu gì? Ở đây có hàng trăm công thức dễ làm, mẹo bếp núc hay ho và cả những
+              món "tủ" được nhiều người yêu thích — cứ thong thả lướt qua và chọn món hợp ý bạn.
             </p>
             <div className="mt-6.5 flex flex-wrap gap-3">
               <Link
                 href="/recipes"
-                className="inline-flex items-center gap-2 rounded-full bg-cream-300 px-6 py-3.5 font-body text-sm font-semibold text-ink-800 transition-all hover:-translate-y-0.5 hover:bg-cream-400 hover:shadow-[0_12px_28px_rgba(0,0,0,0.2)]"
+                className="inline-flex items-center gap-2 rounded-full bg-cream-300 px-6 py-3.5 font-body text-sm font-semibold text-ink-800 transition-all hover:-translate-y-0.5 hover:bg-cream-400 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]"
               >
                 <ChefHatIcon size={18} />
                 Khám phá ngay
@@ -138,15 +139,15 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="mt-6 flex flex-wrap gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-[10px] border border-black/5 bg-cream-50 px-3.5 py-2 font-body text-[12.5px] font-medium text-ink-600">
+              <span className="inline-flex items-center gap-[7px] rounded-[10px] border border-black/5 bg-cream-100 px-[13px] py-[9px] font-body text-[12.5px] font-medium text-ink-600">
                 <ClockIcon size={14} />
                 Cập nhật mỗi tuần
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-[10px] border border-black/5 bg-cream-50 px-3.5 py-2 font-body text-[12.5px] font-medium text-ink-600">
-                <BookOpenIcon size={14} />
+              <span className="inline-flex items-center gap-[7px] rounded-[10px] border border-black/5 bg-cream-100 px-[13px] py-[9px] font-body text-[12.5px] font-medium text-ink-600">
+                <CheckSquareIcon size={14} />
                 Hướng dẫn từng bước
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-[10px] border border-black/5 bg-cream-50 px-3.5 py-2 font-body text-[12.5px] font-medium text-ink-600">
+              <span className="inline-flex items-center gap-[7px] rounded-[10px] border border-black/5 bg-cream-100 px-[13px] py-[9px] font-body text-[12.5px] font-medium text-ink-600">
                 <UsersIcon size={14} />
                 Cộng đồng yêu bếp
               </span>
@@ -180,7 +181,7 @@ export default function HomePage() {
           <Reveal className="mb-6.5 flex items-end justify-between">
             <div>
               <span className="inline-flex items-center gap-1.5 font-body text-xs font-semibold uppercase tracking-[0.08em] text-ink-300">
-                <SparkleIcon size={15} />
+                <HeartIcon size={15} />
                 Được yêu thích
               </span>
               <h2 className="mt-2 text-[34px] font-bold">Món Ngon Được Yêu Thích</h2>
@@ -206,7 +207,7 @@ export default function HomePage() {
             <div>
               <span className="inline-flex items-center gap-1.5 font-body text-xs font-semibold uppercase tracking-[0.08em] text-ink-300">
                 <SparkleIcon size={15} />
-                Cá nhân hóa
+                Gợi ý riêng
               </span>
               <h2 className="mt-2 text-[34px] font-bold">Dành Cho Bạn</h2>
               <p className="mt-2 text-sm text-ink-500">{recoSub}</p>
@@ -222,7 +223,7 @@ export default function HomePage() {
                 <Link
                   key={p.slug}
                   href={`/recipes/${p.slug}`}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-black/6 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-black/12 hover:shadow-[0_16px_34px_rgba(0,0,0,0.10)]"
+                  className="flex flex-col overflow-hidden rounded-2xl border border-black/6 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-black/12 hover:shadow-[0_16px_34px_rgba(0,0,0,0.07)]"
                 >
                   <div
                     className="flex h-23 items-start justify-between p-3"
@@ -248,7 +249,7 @@ export default function HomePage() {
                         {p.time}
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <UsersIcon size={13} />
+                        <UserIcon size={13} />
                         {p.serve}
                       </span>
                       <span className="flex items-center gap-1.5">
@@ -267,7 +268,8 @@ export default function HomePage() {
         <div className="border-t border-black/5 py-13 page-px">
           <Reveal className="mb-6 flex items-end justify-between">
             <div>
-              <span className="font-body text-xs font-semibold uppercase tracking-[0.08em] text-ink-300">
+              <span className="inline-flex items-center gap-1.5 font-body text-xs font-semibold uppercase tracking-[0.08em] text-ink-300">
+                <GridIcon size={15} />
                 Danh mục
               </span>
               <h2 className="mt-2 text-[34px] font-bold">Khám Phá Danh Mục</h2>
@@ -283,7 +285,7 @@ export default function HomePage() {
                 <Link
                   key={c.slug}
                   href={`/categories/${c.slug}`}
-                  className="flex min-h-[150px] flex-col justify-between rounded-2xl border border-black/5 bg-cream-100 p-5 transition-all hover:-translate-y-1 hover:border-black/10 hover:shadow-[0_12px_26px_rgba(0,0,0,0.09)]"
+                  className="flex min-h-[150px] flex-col justify-between rounded-2xl border border-black/5 bg-cream-100 p-5 transition-all hover:-translate-y-1 hover:border-black/10 hover:shadow-[0_12px_26px_rgba(0,0,0,0.06)]"
                 >
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-black/6 bg-white text-ink-600">
                     {Icon ? <Icon size={22} /> : <SparkleIcon size={22} />}
@@ -317,7 +319,7 @@ export default function HomePage() {
             {WHY_CARDS.map(({ title, desc, icon: Icon }) => (
               <div
                 key={title}
-                className="rounded-2xl border border-black/6 bg-white p-6.5 transition-all hover:-translate-y-1 hover:border-black/10 hover:shadow-[0_14px_30px_rgba(0,0,0,0.09)]"
+                className="rounded-2xl border border-black/6 bg-white p-6.5 transition-all hover:-translate-y-1 hover:border-black/10 hover:shadow-[0_14px_30px_rgba(0,0,0,0.06)]"
               >
                 <span className="flex h-12.5 w-12.5 items-center justify-center rounded-[13px] border border-black/6 bg-gradient-to-br from-cream-200 to-white text-ink-900 shadow-[0_6px_16px_rgba(0,0,0,0.06)]">
                   <Icon size={24} />
@@ -341,11 +343,11 @@ function FeaturedRecipeCard({ slug }: { slug: string }) {
   return (
     <Link
       href={`/recipes/${r.slug}`}
-      className="grid grid-cols-[1.12fr_1fr] overflow-hidden rounded-2xl border border-black/7 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-black/12 hover:shadow-[0_16px_34px_rgba(0,0,0,0.10)] max-sm:grid-cols-1"
+      className="flex flex-col overflow-hidden rounded-2xl border border-black/7 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-black/12 hover:shadow-[0_16px_34px_rgba(0,0,0,0.07)]"
     >
-      <Placeholder label={r.imageLabel} className="min-h-57" />
-      <div className="flex flex-col justify-center p-5.5">
-        <div className="mb-3.5 flex items-center justify-between">
+      <Placeholder label={r.imageLabel} className="h-57.5" />
+      <div className="px-5.5 pt-5 pb-5.5">
+        <div className="flex items-center justify-between">
           <span className="rounded-lg bg-cream-200 px-3 py-1.5 font-body text-xs font-semibold text-ink-600">
             {r.category}
           </span>
@@ -354,7 +356,7 @@ function FeaturedRecipeCard({ slug }: { slug: string }) {
             Nổi bật
           </span>
         </div>
-        <div className="mb-2.5 flex items-center justify-between text-[12.5px] text-ink-300">
+        <div className="mt-3.5 mb-1.5 flex items-center justify-between text-[12.5px] text-ink-300">
           <span className="flex items-center gap-1.5">
             <ChefHatIcon size={14} />
             {r.author}
@@ -364,26 +366,26 @@ function FeaturedRecipeCard({ slug }: { slug: string }) {
             {r.date}
           </span>
         </div>
-        <h3 className="text-2xl font-bold">{r.name}</h3>
-        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-500">{r.description}</p>
-        <div className="mt-5 grid grid-cols-4 gap-2.5">
-          <StatBox label="Thời gian" value={r.time} />
-          <StatBox label="Khẩu phần" value={r.serve} />
+        <h3 className="mt-1.5 mb-2 text-2xl font-bold">{r.name}</h3>
+        <p className="line-clamp-3 text-[13.5px] leading-relaxed text-ink-500">{r.description}</p>
+        <div className="mt-4.5 grid grid-cols-4 gap-2">
+          <StatBox label="Thời gian" value={shortTime(r.time)} icon={<ClockIcon size={15} />} />
+          <StatBox label="Khẩu phần" value={r.serve} icon={<UserIcon size={15} />} />
           <StatBox
             label="Độ khó"
             value={r.difficulty}
             badge={
               <span
-                className="flex h-4.5 w-4.5 items-center justify-center rounded-full font-heading text-[10px] font-bold text-white"
+                className="flex h-4 w-4 items-center justify-center rounded-full font-heading text-[10px] font-bold text-white"
                 style={{ background: diff.color }}
               >
                 {diff.num}
               </span>
             }
           />
-          <StatBox label="Đánh giá" value={r.rating} icon={<StarIcon size={16} className="text-gold-700" />} />
+          <StatBox label="Đánh giá" value={r.rating} icon={<StarIcon size={15} className="text-gold-700" />} />
         </div>
-        <div className="mt-4.5 flex items-center justify-between border-t border-black/6 pt-4 text-xs text-ink-300">
+        <div className="mt-4 flex items-center justify-between border-t border-black/6 pt-3.5 text-xs text-ink-300">
           <span className="flex gap-2">
             <span className="rounded-md bg-cream-200 px-2.5 py-0.5 text-ink-600">#{r.tags[0]}</span>
             {r.tags.length > 1 && <span className="rounded-md bg-cream-200 px-2.5 py-0.5 text-ink-600">+{r.tags.length - 1}</span>}
@@ -406,7 +408,7 @@ function SideRecipeCard({ slug }: { slug: string }) {
   return (
     <Link
       href={`/recipes/${r.slug}`}
-      className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-black/6 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-black/12 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)]"
+      className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-black/6 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-black/12 hover:shadow-[0_14px_30px_rgba(0,0,0,0.07)]"
     >
       <div
         className="flex h-25 items-start justify-between p-3.5"
@@ -436,7 +438,7 @@ function SideRecipeCard({ slug }: { slug: string }) {
             {r.time}
           </span>
           <span className="flex items-center gap-1.5">
-            <UsersIcon size={14} />
+            <UserIcon size={14} />
             {r.serve}
           </span>
           <span>{r.difficulty}</span>
@@ -458,10 +460,10 @@ function StatBox({
   badge?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[13px] bg-cream-100 p-2.5 text-center">
-      <div className="mb-1 flex justify-center text-ink-300">{icon ?? badge}</div>
-      <div className="text-[10.5px] text-ink-300">{label}</div>
-      <div className="font-heading text-[15px] font-bold">{value}</div>
+    <div className="rounded-[11px] bg-cream-100 px-2 py-[11px] text-center">
+      <div className="mb-[5px] flex justify-center text-ink-300">{icon ?? badge}</div>
+      <div className="text-[10px] text-ink-300">{label}</div>
+      <div className="font-heading text-[13px] font-bold">{value}</div>
     </div>
   );
 }

@@ -53,6 +53,12 @@ export function parseMinutes(t: string): number {
   return m || 0;
 }
 
+/** Abbreviates Vietnamese durations to match the design's compact stat boxes:
+ *  "4 giờ 55 phút" → "4g 55p", "45 phút" → "45p". */
+export function shortTime(t: string): string {
+  return t.replace(/\s*gi(ờ|o)/g, "g").replace(/\s*ph(ú|u)t/g, "p");
+}
+
 export function formatClock(totalSeconds: number): string {
   const s = Math.max(0, Math.round(totalSeconds));
   const h = Math.floor(s / 3600);

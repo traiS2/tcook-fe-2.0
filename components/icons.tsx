@@ -42,10 +42,28 @@ export function UsersIcon(p: IconProps) {
   );
 }
 
+export function UserIcon(p: IconProps) {
+  return (
+    <svg {...base(p.size, p.className)}>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+    </svg>
+  );
+}
+
 export function StarIcon({ size, className, fill = "currentColor" }: IconProps & { fill?: string }) {
   return (
     <svg width={size ?? 18} height={size ?? 18} viewBox="0 0 24 24" fill={fill} className={className}>
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" />
+    </svg>
+  );
+}
+
+export function AwardIcon(p: IconProps) {
+  return (
+    <svg {...base(p.size, p.className)}>
+      <circle cx="12" cy="8" r="7" />
+      <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
     </svg>
   );
 }
@@ -342,6 +360,16 @@ export function TagIcon(p: IconProps) {
   );
 }
 
+export function BagIcon(p: IconProps) {
+  return (
+    <svg {...base(p.size, p.className)}>
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  );
+}
+
 export function BasketIcon(p: IconProps) {
   return (
     <svg {...base(p.size, p.className)}>
@@ -361,7 +389,17 @@ export function TrendUpIcon(p: IconProps) {
 export function BookOpenIcon(p: IconProps) {
   return (
     <svg {...base(p.size, p.className)}>
-      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+    </svg>
+  );
+}
+
+export function CheckSquareIcon(p: IconProps) {
+  return (
+    <svg {...base(p.size, p.className)}>
+      <path d="M9 11l3 3L22 4" />
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
     </svg>
   );
 }

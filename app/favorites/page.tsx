@@ -8,7 +8,7 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import { useFavorites } from "@/hooks/useFavorites";
 import { getRecipeBySlug, type Recipe } from "@/lib/data";
 import { difficultyMeta } from "@/lib/format";
-import { ArrowRightIcon, ClockIcon, HeartIcon, StarIcon, TrashIcon, UsersIcon } from "@/components/icons";
+import { ArrowRightIcon, ClockIcon, HeartIcon, StarIcon, TrashIcon, UserIcon } from "@/components/icons";
 
 export default function FavoritesPage() {
   const { favoriteSlugs, removeFavorite, clearFavorites } = useFavorites();
@@ -129,7 +129,7 @@ function FavoriteCard({ recipe: r, onRemove }: { recipe: Recipe; onRemove: () =>
           </div>
           <div className="rounded-[11px] bg-cream-100 px-1.5 py-2.5 text-center">
             <div className="mb-0.75 flex justify-center text-ink-300">
-              <UsersIcon size={14} />
+              <UserIcon size={14} />
             </div>
             <div className="text-[9.5px] text-ink-300">Khẩu phần</div>
             <div className="font-heading text-xs font-bold">{r.serve}</div>

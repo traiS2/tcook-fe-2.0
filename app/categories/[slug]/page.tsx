@@ -21,7 +21,7 @@ import {
   SoupIcon,
   StarIcon,
   TagIcon,
-  UsersIcon,
+  UserIcon,
 } from "@/components/icons";
 
 export default function CategoryDetailPage() {
@@ -179,7 +179,7 @@ export default function CategoryDetailPage() {
                     <p className="mt-1.5 line-clamp-3 text-[12.5px] leading-relaxed text-ink-500">{r.description}</p>
                     <div className="mt-3.5 grid grid-cols-4 gap-1.5">
                       <StatBox icon={<ClockIcon size={14} />} label="Thời gian" value={r.time} />
-                      <StatBox icon={<UsersIcon size={14} />} label="Khẩu phần" value={r.serve} />
+                      <StatBox icon={<UserIcon size={14} />} label="Khẩu phần" value={r.serve} />
                       <StatBox
                         icon={
                           <span

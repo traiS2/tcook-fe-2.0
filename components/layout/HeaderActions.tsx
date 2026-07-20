@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useFavorites } from "@/hooks/useFavorites";
 import { RECIPES } from "@/lib/data";
@@ -54,7 +55,7 @@ export function HeaderActions() {
             e.stopPropagation();
             setFavOpen((v) => !v);
           }}
-          className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-black/6 bg-cream-100 text-ink-600 transition-colors hover:bg-cream-300 hover:text-ink-800"
+          className="relative flex h-11 w-11 items-center justify-center rounded-[14px] border border-black/6 bg-cream-100 text-ink-600 transition-colors hover:bg-cream-300 hover:text-ink-800"
         >
           <HeartIcon size={19} />
           {favRecipes.length > 0 && (
@@ -123,12 +124,12 @@ export function HeaderActions() {
         type="button"
         aria-label="Tìm kiếm"
         onClick={() => setSearchOpen(true)}
-        className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/6 bg-cream-100 text-ink-600 transition-colors hover:bg-cream-300 hover:text-ink-800"
+        className="flex h-11 w-11 items-center justify-center rounded-[14px] border border-black/6 bg-cream-100 text-ink-600 transition-colors hover:bg-cream-300 hover:text-ink-800"
       >
         <SearchIcon size={19} />
       </button>
 
-      {searchOpen && (
+      {searchOpen && createPortal(
         <div
           onClick={() => {
             setSearchOpen(false);
@@ -221,7 +222,8 @@ export function HeaderActions() {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
