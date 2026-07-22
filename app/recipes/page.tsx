@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -20,6 +20,7 @@ import {
   CommentIcon,
   EyeIcon,
   HeartIcon,
+  RotateCcwIcon,
   SearchIcon,
   StarIcon,
   UserIcon,
@@ -35,6 +36,21 @@ const DIFFICULTY_OPTIONS: { value: string; label: string }[] = [
 const TIME_OPTIONS = ["Tất cả", "< 30 phút", "30–60 phút", "> 1 giờ"];
 const RATING_OPTIONS = ["Tất cả", "4.5★+", "4.7★+", "4.9★+"];
 const INGREDIENT_OPTIONS = ["Thịt gà", "Thịt bò", "Thịt heo", "Trứng", "Rau củ", "Cà phê", "Trà", "Sữa"];
+
+type SortKey = "newest" | "oldest" | "rating" | "views" | "likes";
+const SORT_OPTIONS: { key: SortKey; label: string }[] = [
+  { key: "newest", label: "Mới nhất" },
+  { key: "oldest", label: "Cũ nhất" },
+  { key: "rating", label: "Đánh giá cao" },
+  { key: "views", label: "Xem nhiều nhất" },
+  { key: "likes", label: "Yêu thích nhiều" },
+];
+
+/** Parses "12 thg 4, 2026" into a sortable timestamp. */
+function parseRecipeDate(d: string): number {
+  const m = d.match(/(\d+)\s*thg\s*(\d+),\s*(\d+)/);
+  return m ? new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1])).getTime() : 0;
+}
 
 function DownChevronIcon({ size = 14 }: { size?: number }) {
   return (
@@ -62,6 +78,10 @@ export default function RecipesPage() {
   const [timeFilter, setTimeFilter] = useState("Tất cả");
   const [ratingFilter, setRatingFilter] = useState("Tất cả");
   const [ingredients, setIngredients] = useState<string[]>([]);
+  const [visibleCount, setVisibleCount] = useState(6);
+  const [sortBy, setSortBy] = useState<SortKey>("newest");
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
 
   const featured = getRecipeBySlug(FEATURED_RECIPE_SLUG)!;
   const featFav = isFavorite(featured.slug);
@@ -128,6 +148,41 @@ export default function RecipesPage() {
     setIngredients((prev) => (prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]));
   };
 
+  // Reset pagination whenever the filter/sort changes so results start fresh.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVisibleCount(6);
+  }, [category, difficulty, timeFilter, ratingFilter, ingredients, query, sortBy]);
+
+  // Close the sort menu when clicking outside of it.
+  useEffect(() => {
+    if (!sortOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) setSortOpen(false);
+    };
+    document.addEventListener("click", onDoc);
+    return () => document.removeEventListener("click", onDoc);
+  }, [sortOpen]);
+
+  const sorted = useMemo(() => {
+    const arr = [...filtered];
+    switch (sortBy) {
+      case "oldest":
+        return arr.sort((a, b) => parseRecipeDate(a.date) - parseRecipeDate(b.date));
+      case "rating":
+        return arr.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
+      case "views":
+        return arr.sort((a, b) => b.views - a.views);
+      case "likes":
+        return arr.sort((a, b) => b.likes - a.likes);
+      default:
+        return arr.sort((a, b) => parseRecipeDate(b.date) - parseRecipeDate(a.date));
+    }
+  }, [filtered, sortBy]);
+
+  const visible = sorted.slice(0, visibleCount);
+  const hasMore = visibleCount < sorted.length;
+
   const catSuffix = category === "Tất cả" ? "" : ` · ${category}`;
 
   return (
@@ -136,12 +191,6 @@ export default function RecipesPage() {
 
       {/* featured */}
       <Reveal className="page-px pt-7.5">
-        <div className="mb-3.5 flex items-center gap-2">
-          <span className="font-body text-xs font-semibold uppercase tracking-[0.1em] text-ink-300">
-            Công thức của tuần
-          </span>
-          <span className="h-px flex-1 bg-black/8" />
-        </div>
         <Link
           href={`/recipes/${featured.slug}`}
           className="grid grid-cols-[1.12fr_1fr] overflow-hidden rounded-[18px] border border-black/7 bg-white shadow-[0_6px_22px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-black/12 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] max-lg:grid-cols-1"
@@ -274,8 +323,8 @@ export default function RecipesPage() {
                   key={d.value}
                   type="button"
                   onClick={() => setDifficulty(d.value)}
-                  className={`rounded-full px-3.25 py-1.5 font-body text-xs font-medium transition-colors ${
-                    difficulty === d.value ? "bg-cream-300 text-ink-800" : "bg-cream-200 text-ink-600 hover:bg-cream-300"
+                  className={`rounded-full border px-3.25 py-1.5 font-body text-xs font-medium transition-colors ${
+                    difficulty === d.value ? "border-transparent bg-cream-300 text-ink-800" : "border-black/12 bg-white text-ink-600 hover:border-black/25 hover:bg-cream-50"
                   }`}
                 >
                   {d.label}
@@ -292,8 +341,8 @@ export default function RecipesPage() {
                   key={t}
                   type="button"
                   onClick={() => setTimeFilter(t)}
-                  className={`rounded-full px-3.25 py-1.5 font-body text-xs font-medium transition-colors ${
-                    timeFilter === t ? "bg-cream-300 text-ink-800" : "bg-cream-200 text-ink-600 hover:bg-cream-300"
+                  className={`rounded-full border px-3.25 py-1.5 font-body text-xs font-medium transition-colors ${
+                    timeFilter === t ? "border-transparent bg-cream-300 text-ink-800" : "border-black/12 bg-white text-ink-600 hover:border-black/25 hover:bg-cream-50"
                   }`}
                 >
                   {t}
@@ -310,8 +359,8 @@ export default function RecipesPage() {
                   key={t}
                   type="button"
                   onClick={() => setRatingFilter(t)}
-                  className={`rounded-full px-3.25 py-1.5 font-body text-xs font-medium transition-colors ${
-                    ratingFilter === t ? "bg-cream-300 text-ink-800" : "bg-cream-200 text-ink-600 hover:bg-cream-300"
+                  className={`rounded-full border px-3.25 py-1.5 font-body text-xs font-medium transition-colors ${
+                    ratingFilter === t ? "border-transparent bg-cream-300 text-ink-800" : "border-black/12 bg-white text-ink-600 hover:border-black/25 hover:bg-cream-50"
                   }`}
                 >
                   {t}
@@ -363,18 +412,48 @@ export default function RecipesPage() {
 
         {/* grid */}
         <div>
-          <Reveal className="mb-5 flex items-center justify-between">
+          <Reveal className="relative z-30 mb-5 flex items-center justify-between">
             <span className="text-[13.5px] text-ink-300">
               <b className="font-heading text-ink-900">{filtered.length}</b> công thức{catSuffix}
             </span>
-            <span className="inline-flex items-center gap-1.75 rounded-[10px] border border-black/10 px-3.25 py-2.25 font-body text-[13px] text-ink-600">
-              Mới nhất <DownChevronIcon size={14} />
-            </span>
+            <div ref={sortRef} className="relative">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSortOpen((v) => !v);
+                }}
+                className="inline-flex items-center gap-1.75 rounded-[10px] border border-black/10 px-3.25 py-2.25 font-body text-[13px] text-ink-600 transition-colors hover:bg-cream-100"
+              >
+                {SORT_OPTIONS.find((o) => o.key === sortBy)?.label}
+                <DownChevronIcon size={14} />
+              </button>
+              {sortOpen && (
+                <div className="absolute right-0 top-full z-40 mt-1.5 w-44 overflow-hidden rounded-xl border border-black/8 bg-white py-1 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
+                  {SORT_OPTIONS.map((o) => (
+                    <button
+                      key={o.key}
+                      type="button"
+                      onClick={() => {
+                        setSortBy(o.key);
+                        setSortOpen(false);
+                      }}
+                      className={`flex w-full items-center justify-between px-3.5 py-2 text-left font-body text-[13px] transition-colors hover:bg-cream-100 ${
+                        sortBy === o.key ? "font-semibold text-ink-900" : "text-ink-600"
+                      }`}
+                    >
+                      {o.label}
+                      {sortBy === o.key && <CheckIcon size={14} />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </Reveal>
 
           {filtered.length > 0 ? (
             <Reveal delay="80ms" className="grid grid-cols-2 gap-5.5 max-sm:grid-cols-1">
-              {filtered.map((r) => (
+              {visible.map((r) => (
                 <RecipeCard key={r.slug} recipe={r} isFav={isFavorite(r.slug)} onToggleFav={() => toggleFavorite(r.slug)} />
               ))}
             </Reveal>
@@ -395,11 +474,27 @@ export default function RecipesPage() {
             </div>
           )}
 
-          {filtered.length > 0 && (
-            <Reveal className="mt-9 flex justify-center">
-              <span className="inline-flex items-center gap-2.25 rounded-full border border-black/14 bg-white px-7 py-3.5 font-body text-sm font-semibold text-ink-900 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-                Xem thêm công thức <ArrowRightIcon size={17} />
-              </span>
+          {filtered.length > 0 && (hasMore || activeFilterCount > 0) && (
+            <Reveal className="mt-9 flex flex-wrap items-center justify-center gap-3">
+              {hasMore && (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((c) => c + 6)}
+                  className="inline-flex items-center gap-2.25 rounded-full border border-black/14 bg-white px-7 py-3.5 font-body text-sm font-semibold text-ink-900 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all hover:-translate-y-0.5 hover:bg-cream-50"
+                >
+                  Xem thêm công thức <ArrowRightIcon size={17} />
+                </button>
+              )}
+              {activeFilterCount > 0 && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-cream-100 px-7 py-3.5 font-body text-sm font-semibold text-ink-600 transition-all hover:-translate-y-0.5 hover:bg-cream-200 hover:text-ink-900"
+                >
+                  <RotateCcwIcon size={16} />
+                  Xóa bộ lọc · {activeFilterCount}
+                </button>
+              )}
             </Reveal>
           )}
         </div>

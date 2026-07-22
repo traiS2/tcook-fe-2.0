@@ -132,6 +132,15 @@
     outline-color: color-mix(in oklab, var(--color-ring) 50%, transparent);
   }
 
+  html {
+    /* Reserve the scrollbar gutter on BOTH sides so max-width content stays
+       centred (equal left/right gutters) and never shifts horizontally when
+       navigating between a page that has a vertical scrollbar (e.g. the
+       planner) and one that doesn't. `stable` alone reserves only the right
+       edge, which pushes centred content ~15px to the left. */
+    scrollbar-gutter: stable both-edges;
+  }
+
   body {
     margin: 0;
     background: #fff;

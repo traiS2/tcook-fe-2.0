@@ -144,10 +144,10 @@ export default function CategoriesPage() {
             <span
               key={s}
               onClick={() => setSort(s)}
-              className={`cursor-pointer rounded-full px-3.75 py-1.75 font-body text-[13px] font-medium transition-colors ${
+              className={`cursor-pointer rounded-full border px-3.75 py-1.75 font-body text-[13px] font-medium transition-colors ${
                 sort === s
-                  ? "bg-cream-300 text-ink-800"
-                  : "bg-cream-200 text-ink-600 hover:bg-cream-300 hover:text-ink-900"
+                  ? "border-transparent bg-cream-300 text-ink-800"
+                  : "border-black/12 bg-white text-ink-600 hover:border-black/25 hover:bg-cream-50"
               }`}
             >
               {s}

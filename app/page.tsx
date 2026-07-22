@@ -119,7 +119,7 @@ export default function HomePage() {
             </p>
             <p className="mt-4 max-w-[430px] text-[15px] leading-relaxed text-ink-500">
               Hôm nay nấu gì? Ở đây có hàng trăm công thức dễ làm, mẹo bếp núc hay ho và cả những
-              món "tủ" được nhiều người yêu thích — cứ thong thả lướt qua và chọn món hợp ý bạn.
+              món &ldquo;tủ&rdquo; được nhiều người yêu thích — cứ thong thả lướt qua và chọn món hợp ý bạn.
             </p>
             <div className="mt-6.5 flex flex-wrap gap-3">
               <Link

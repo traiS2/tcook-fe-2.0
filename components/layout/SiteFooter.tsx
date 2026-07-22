@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { slugify } from "@/lib/format";
+import { NewsletterForm } from "./NewsletterForm";
 import {
   ChefHatIcon,
   FacebookIcon,
@@ -59,21 +61,23 @@ export function SiteFooter({ active, wide = false }: { active?: string; wide?: b
           <h4 className="mb-3.5 text-[15px]">Danh Mục Phổ Biến</h4>
           <div className="flex flex-col gap-2.5 text-[13.5px] text-ink-500">
             {POPULAR_CATEGORIES.map((c) => (
-              <span key={c}>{c}</span>
+              <Link key={c} href={`/categories/${slugify(c)}`} className="w-fit hover:text-ink-900">
+                {c}
+              </Link>
             ))}
           </div>
         </div>
         <div>
           <h4 className="mb-3.5 text-[15px]">Thông Tin Liên Hệ</h4>
           <div className="flex flex-col gap-2.5 text-[13px] text-ink-500">
-            <span className="flex items-center gap-2">
+            <a href="mailto:contact@tcook.vn" className="flex w-fit items-center gap-2 hover:text-ink-900">
               <MailIcon size={15} />
               contact@tcook.vn
-            </span>
-            <span className="flex items-center gap-2">
+            </a>
+            <a href="tel:+84123456789" className="flex w-fit items-center gap-2 hover:text-ink-900">
               <PhoneIcon size={15} />
               +84 123 456 789
-            </span>
+            </a>
             <span className="flex items-center gap-2">
               <MapPinIcon size={15} />
               Hồ Chí Minh, Việt Nam
@@ -112,14 +116,7 @@ export function SiteFooter({ active, wide = false }: { active?: string; wide?: b
             Nhận những công thức mới nhất và tips nấu ăn hữu ích mỗi tuần
           </p>
         </div>
-        <div className="flex flex-none gap-2.5">
-          <span className="min-w-[230px] rounded-[10px] border border-black/12 bg-white px-4 py-3 text-[13px] text-ink-200">
-            VD: email@domain.com
-          </span>
-          <span className="cursor-pointer rounded-[10px] bg-cream-300 px-[22px] py-3 font-body text-sm font-semibold text-ink-800 transition-transform hover:-translate-y-0.5">
-            Đăng Ký
-          </span>
-        </div>
+        <NewsletterForm />
       </div>
 
       <div className="mt-[22px] flex items-center justify-between border-t border-black/6 pt-[18px] text-xs text-ink-300 max-sm:flex-col max-sm:gap-1.5">

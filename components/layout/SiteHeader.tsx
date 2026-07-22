@@ -31,25 +31,25 @@ export function SiteHeader({
       {/* utility bar */}
       <div className={`flex items-center justify-between border-b border-black/5 py-1 text-xs text-ink-400 ${pageX}`}>
         <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-2">
             <a
               href="#"
               aria-label="Instagram"
-              className="rounded-[10px] px-2 py-0 text-ink-400 transition-[color,transform] duration-300 hover:-translate-y-0.5 hover:text-pink-500"
+              className="flex h-[28px] w-[28px] items-center justify-center rounded-full text-ink-400 transition-[color,background-color,transform] duration-300 hover:scale-110 hover:bg-gradient-to-br hover:from-pink-500 hover:to-amber-400 hover:text-white"
             >
               <InstagramIcon size={16} />
             </a>
             <a
               href="#"
               aria-label="Facebook"
-              className="rounded-[10px] px-2 py-0 text-ink-400 transition-[color,transform] duration-300 hover:-translate-y-0.5 hover:text-blue-500"
+              className="flex h-[28px] w-[28px] items-center justify-center rounded-full text-ink-400 transition-[color,background-color,transform] duration-300 hover:scale-110 hover:bg-blue-500 hover:text-white"
             >
               <FacebookIcon size={16} />
             </a>
             <a
               href="#"
               aria-label="YouTube"
-              className="rounded-[10px] px-2 py-0 text-ink-400 transition-[color,transform] duration-300 hover:-translate-y-0.5 hover:text-red-500"
+              className="flex h-[28px] w-[28px] items-center justify-center rounded-full text-ink-400 transition-[color,background-color,transform] duration-300 hover:scale-110 hover:bg-red-500 hover:text-white"
             >
               <YoutubeIcon size={18} />
             </a>
@@ -76,18 +76,18 @@ export function SiteHeader({
             <HeartIcon size={14} fill={activeUtility === "favorites" ? "currentColor" : "none"} />
             Yêu thích
           </Link>
-          <span className="inline-flex items-center gap-0.5 rounded-full bg-cream-200 p-0.5 font-semibold text-ink-900">
+          <span className="inline-flex items-center gap-0.5 rounded-full border border-black/10 p-0.5 font-semibold text-ink-900">
             <button
               type="button"
               onClick={() => setLanguage("vi")}
-              className={`rounded-full px-2 py-0.5 transition-colors ${language === "vi" ? "bg-cream-300 text-ink-800" : "text-ink-300 hover:text-ink-600"}`}
+              className={`rounded-full px-2 py-0.5 transition-colors ${language === "vi" ? "bg-cream-300 text-ink-800" : "text-ink-400 hover:text-ink-700"}`}
             >
               VI
             </button>
             <button
               type="button"
               onClick={() => setLanguage("en")}
-              className={`rounded-full px-2 py-0.5 transition-colors ${language === "en" ? "bg-cream-300 text-ink-800" : "text-ink-300 hover:text-ink-600"}`}
+              className={`rounded-full px-2 py-0.5 transition-colors ${language === "en" ? "bg-cream-300 text-ink-800" : "text-ink-400 hover:text-ink-700"}`}
             >
               EN
             </button>

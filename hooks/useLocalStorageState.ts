@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const SYNC_EVENT = "tcook-sync";
 
@@ -31,29 +31,38 @@ function write<T>(key: string, value: T) {
  */
 export function useLocalStorageState<T>(key: string, fallback: T) {
   const [value, setValue] = useState<T>(fallback);
+  // Mirror of the latest value, kept in sync inside the effect + `update` below
+  // (never during render). This lets `update` compute the next value without a
+  // functional setState updater, so the localStorage write / sync-event dispatch
+  // runs in the caller (event handler / effect) rather than inside a render-phase
+  // updater where it could setState other components mid-render.
+  const valueRef = useRef<T>(value);
 
   useEffect(() => {
     // Deliberate: hydrate from localStorage after mount so server and first
     // client render both use `fallback` and never mismatch.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setValue(read(key, fallback));
-    const sync = () => setValue(read(key, fallback));
-    window.addEventListener(SYNC_EVENT, sync);
-    window.addEventListener("storage", sync);
+    const apply = () => {
+      const next = read(key, fallback);
+      valueRef.current = next;
+      setValue(next);
+    };
+    apply();
+    window.addEventListener(SYNC_EVENT, apply);
+    window.addEventListener("storage", apply);
     return () => {
-      window.removeEventListener(SYNC_EVENT, sync);
-      window.removeEventListener("storage", sync);
+      window.removeEventListener(SYNC_EVENT, apply);
+      window.removeEventListener("storage", apply);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
   const update = useCallback(
     (updater: T | ((prev: T) => T)) => {
-      setValue((prev) => {
-        const next = typeof updater === "function" ? (updater as (p: T) => T)(prev) : updater;
-        write(key, next);
-        return next;
-      });
+      const next =
+        typeof updater === "function" ? (updater as (p: T) => T)(valueRef.current) : updater;
+      valueRef.current = next;
+      setValue(next);
+      write(key, next);
     },
     [key]
   );

@@ -63,6 +63,35 @@ export default function RecipeDetailPage() {
   const [timerRunning, setTimerRunning] = useState(false);
   const [timeTotal, setTimeTotal] = useState(0);
 
+  // Review form state.
+  const [reviews, setReviews] = useState<(typeof RECIPE_REVIEWS)[number][]>(RECIPE_REVIEWS);
+  const [reviewStars, setReviewStars] = useState(0);
+  const [hoverStars, setHoverStars] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+
+  const avgRating = reviews.length
+    ? reviews.reduce((sum, r) => sum + r.stars, 0) / reviews.length
+    : 0;
+
+  const submitReview = () => {
+    if (reviewStars === 0) return;
+    setReviews((prev) => [
+      {
+        initial: "B",
+        avatarBg: "#e0dcf0",
+        avatarColor: "#6b5fa8",
+        name: "Bạn",
+        stars: reviewStars,
+        timeAgo: "Vừa xong",
+        body: reviewText.trim() || "Đã đánh giá công thức này.",
+      },
+      ...prev,
+    ]);
+    setReviewStars(0);
+    setHoverStars(0);
+    setReviewText("");
+  };
+
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
 
@@ -550,35 +579,59 @@ export default function RecipeDetailPage() {
               <div className="mb-5 flex items-start justify-between">
                 <div>
                   <h4 className="mb-4 text-[14.5px] font-semibold text-ink-700">Để lại đánh giá của bạn</h4>
-                  <div className="flex gap-1.5 text-gold-700">
+                  <div className="flex gap-1.5 text-gold-700" onMouseLeave={() => setHoverStars(0)}>
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <StarIcon key={i} size={24} fill="none" className="stroke-2" />
+                      <button
+                        key={i}
+                        type="button"
+                        aria-label={`${i + 1} sao`}
+                        onClick={() => setReviewStars(i + 1)}
+                        onMouseEnter={() => setHoverStars(i + 1)}
+                        className="transition-transform hover:scale-110 active:scale-95"
+                      >
+                        <StarIcon
+                          size={24}
+                          fill={i < (hoverStars || reviewStars) ? "currentColor" : "none"}
+                          className="stroke-2"
+                        />
+                      </button>
                     ))}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-heading text-3xl font-bold leading-none text-ink-900">5.0</div>
+                  <div className="font-heading text-3xl font-bold leading-none text-ink-900">
+                    {avgRating.toFixed(1)}
+                  </div>
                   <div className="my-1.5 flex justify-end gap-0.5 text-gold-700">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <StarIcon key={i} size={13} />
+                      <StarIcon key={i} size={13} fill={i < Math.round(avgRating) ? "currentColor" : "none"} />
                     ))}
                   </div>
-                  <div className="text-[11.5px] text-ink-300">Dựa trên 3 đánh giá</div>
+                  <div className="text-[11.5px] text-ink-300">Dựa trên {reviews.length} đánh giá</div>
                 </div>
               </div>
-              <div className="min-h-16 rounded-[11px] border border-black/7 bg-[#f0ede8] px-4 py-3.5 text-[13.5px] text-ink-200">
-                Chia sẻ cảm nhận của bạn về công thức này...
-              </div>
-              <div className="mt-3 flex justify-end">
-                <span className="rounded-[10px] bg-cream-300 px-5 py-2.5 font-body text-[13px] font-semibold text-ink-800">
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Chia sẻ cảm nhận của bạn về công thức này..."
+                rows={3}
+                className="min-h-16 w-full resize-y rounded-[11px] border border-black/7 bg-[#f0ede8] px-4 py-3.5 font-body text-[13.5px] text-ink-800 outline-none placeholder:text-ink-200 focus:border-black/20"
+              />
+              <div className="mt-3 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={submitReview}
+                  disabled={reviewStars === 0}
+                  className="rounded-[10px] bg-cream-300 px-5 py-2.5 font-body text-[13px] font-semibold text-ink-800 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+                >
                   Gửi đánh giá
-                </span>
+                </button>
               </div>
             </div>
             <div className="border-t border-black/6" />
             <div className="flex flex-col gap-4">
-              {RECIPE_REVIEWS.map((r) => (
-                <div key={r.name} className="flex gap-3">
+              {reviews.map((r, ri) => (
+                <div key={`${r.name}-${ri}`} className="flex gap-3">
                   <div
                     className="flex h-9 w-9 flex-none items-center justify-center rounded-full font-body text-sm font-bold"
                     style={{ background: r.avatarBg, color: r.avatarColor }}

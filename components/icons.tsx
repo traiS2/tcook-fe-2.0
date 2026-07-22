@@ -52,8 +52,20 @@ export function UserIcon(p: IconProps) {
 }
 
 export function StarIcon({ size, className, fill = "currentColor" }: IconProps & { fill?: string }) {
+  // When unfilled, draw the star as an outline (stroke) so it stays visible —
+  // otherwise a fill-only polygon with fill="none" would be invisible.
+  const outline = fill === "none";
   return (
-    <svg width={size ?? 18} height={size ?? 18} viewBox="0 0 24 24" fill={fill} className={className}>
+    <svg
+      width={size ?? 18}
+      height={size ?? 18}
+      viewBox="0 0 24 24"
+      fill={fill}
+      stroke={outline ? "currentColor" : "none"}
+      strokeWidth={outline ? 1.8 : undefined}
+      strokeLinejoin="round"
+      className={className}
+    >
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" />
     </svg>
   );

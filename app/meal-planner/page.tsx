@@ -45,10 +45,10 @@ export default function MealPlannerPage() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <SiteHeader activeUtility="meal-planner" wide />
+      <SiteHeader activeUtility="meal-planner" />
 
       <div className="border-t border-black/5 bg-gradient-to-b from-cream-50 to-white">
-        <div className="page-px-wide pb-6.5 pt-8.5">
+        <div className="page-px pb-6.5 pt-8.5">
           <div className="mb-4 flex items-center gap-2 text-[12.5px] text-ink-300">
             <Link href="/" className="text-ink-300">
               Trang chủ
@@ -94,7 +94,7 @@ export default function MealPlannerPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-[1fr_290px] items-start gap-6.5 page-px-wide pb-15 pt-7.5 max-lg:grid-cols-1">
+      <div className="grid grid-cols-[1fr_290px] items-start gap-6.5 page-px pb-15 pt-7.5 max-lg:grid-cols-1">
         {/* planner grid */}
         <div className="overflow-x-auto rounded-2xl border border-black/8 bg-white p-4 shadow-[0_8px_26px_rgba(0,0,0,0.05)]">
           <div className="grid min-w-[760px] grid-cols-[96px_repeat(7,minmax(96px,1fr))] gap-2">
@@ -217,7 +217,7 @@ export default function MealPlannerPage() {
         </aside>
       </div>
 
-      <SiteFooter active="Lịch nấu ăn" wide />
+      <SiteFooter active="Lịch nấu ăn" />
     </div>
   );
 }
